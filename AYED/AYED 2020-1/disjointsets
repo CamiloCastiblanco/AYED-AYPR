@@ -1,0 +1,61 @@
+from sys import stdin
+import math
+from random import randint
+
+class DisjointSet:
+
+    def __init__(self):
+        self.data = []
+
+    def find(self, e):
+        for st in self.data:
+            if e in st :
+                return st
+        return None
+
+    def findTuple(self, tuple):
+        return (self.find(tuple[0]), self.find(tuple[1]))
+
+    def insert(self, el):
+        if self.find(el) is None :
+            self.data.append(set([el]))
+
+    def union(self, s1, s2):
+        #Generar el elemnto union
+        unionSet = s1.union(s2)
+        #elminar ambar instancias de S1 y S2
+        self.data.remove(s1)
+        if s1 != s2:
+            self.data.remove(s2)
+        self.data.append(unionSet)
+
+    def buildDisjointSet(self, elements):
+        for e in elements:
+            self.insert(e)
+
+    def getData(self):
+        return self.data
+
+    def calculateConnectedComponents(self, arcs):
+        for pair in arcs:
+            tupleSets = self.findTuple(pair)
+            print('Computed pair:',pair,'Components Found:',tupleSets)
+            self.union(tupleSets[0], tupleSets[1])
+            print('Merge components:',self.data)
+
+
+SIZE = 10
+MAX_ELEMENTS = 100
+RANDOM_ARR = [(randint(0,MAX_ELEMENTS)) for i in range(SIZE)]
+
+def main():
+    vertexes = [ i for i in range(1,10)]
+    arcs = [ (1,2), (1,3), (2,3), (4,4), (5,4), (6,7), (7,8), (6,8)]
+    print(vertexes)
+    dset = DisjointSet()
+    dset.buildDisjointSet(vertexes)
+    print(dset.getData())
+    dset.calculateConnectedComponents(arcs)
+
+
+main()
